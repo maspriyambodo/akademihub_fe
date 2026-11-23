@@ -30,9 +30,13 @@ export const ROUTE_RULES = [
 
   // ── WhatsApp (WAHA) ────────────────────────────────────────
   ['/waha/send', 'waha.send'],
+  ['/waha/broadcast', 'waha.send'],
+  ['/waha/notifications', 'waha.notify.spp'],
   ['/waha/session', 'waha.view'],
   ['/waha', 'waha.view'],
   ['/whatsapp/send', 'waha.send'],
+  ['/whatsapp/broadcast', 'waha.send'],
+  ['/whatsapp/notifications', 'waha.notify.spp'],
   ['/whatsapp/session', 'waha.view'],
   ['/whatsapp/*', 'waha.view'],
   ['/whatsapp', 'waha.view'],

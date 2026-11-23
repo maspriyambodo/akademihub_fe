@@ -311,6 +311,8 @@ const ALL_PROTECTED_LEAF_ROUTES = [
   "/statistik/ujian",
   "/waha",
   "/waha/send",
+  "/waha/broadcast",
+  "/waha/notifications",
   "/waha/session",
   "/wali",
   "/wali/:id",
@@ -318,7 +320,9 @@ const ALL_PROTECTED_LEAF_ROUTES = [
   "/wali/create",
   "/whatsapp",
   "/whatsapp/*",
+  "/whatsapp/notifications",
   "/whatsapp/send",
+  "/whatsapp/broadcast",
   "/whatsapp/session"
 ]
 

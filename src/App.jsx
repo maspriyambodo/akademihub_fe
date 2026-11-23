@@ -464,6 +464,8 @@ function App() {
               <Route path="/whatsapp" element={<Navigate to="/waha/session" replace />} />
               <Route path="/whatsapp/session" element={<Navigate to="/waha/session" replace />} />
               <Route path="/whatsapp/send" element={<Navigate to="/waha/send" replace />} />
+              <Route path="/whatsapp/broadcast" element={<Navigate to="/waha/broadcast" replace />} />
+              <Route path="/whatsapp/notifications" element={<Navigate to="/waha/notifications" replace />} />
               <Route path="/whatsapp/*" element={<Navigate to="/waha/session" replace />} />
               {/* Marketing Email */}
               <Route path="/marketing/email" element={<MarketingEmail />} />

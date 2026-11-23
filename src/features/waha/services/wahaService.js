@@ -14,6 +14,15 @@ export const wahaService = {
     }
   },
 
+  checkConnection: async (appkey) => {
+    const params = appkey ? { appkey } : {}
+    const response = await apiService.get(`${BASE_URL}/connection`, { params })
+    return {
+      ...response,
+      payload: unwrapResponse(response),
+    }
+  },
+
   startSession: async (appkey) => {
     const response = await apiService.post(`${BASE_URL}/session/start`, { appkey })
     return {
@@ -48,6 +57,30 @@ export const wahaService = {
 
   sendMessage: async (data) => {
     const response = await apiService.post(`${BASE_URL}/send`, data)
+    return {
+      ...response,
+      payload: unwrapResponse(response),
+    }
+  },
+
+  previewBroadcast: async (data) => {
+    const response = await apiService.post(`${BASE_URL}/broadcast/preview`, data)
+    return {
+      ...response,
+      payload: unwrapResponse(response),
+    }
+  },
+
+  sendBroadcast: async (data) => {
+    const response = await apiService.post(`${BASE_URL}/broadcast`, data)
+    return {
+      ...response,
+      payload: unwrapResponse(response),
+    }
+  },
+
+  getBroadcastStatus: async (id) => {
+    const response = await apiService.get(`${BASE_URL}/broadcast/${id}`)
     return {
       ...response,
       payload: unwrapResponse(response),

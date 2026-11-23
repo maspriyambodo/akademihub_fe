@@ -439,7 +439,7 @@ export const PANDUAN_MODULES = [
       'Setelah status session berubah menjadi "CONNECTED" (hijau), seluruh otomatisasi pesan aktif:',
       '• Notifikasi Presensi: Terkirim otomatis saat siswa tap kartu RFID di gerbang.',
       '• Notifikasi SPP: Terkirim otomatis saat tagihan baru terbit atau saat konfirmasi pelunasan sukses.',
-      '• Broadcast Pengumuman: Gunakan menu "Kirim Pesan" (/waha/send) untuk mengirim pesan pengumuman penting ke seluruh wali murid per kelas.',
+      '• Broadcast Pengumuman: Gunakan menu "Broadcast" (/waha/broadcast), pilih sumber Siswa, Wali Murid, dan/atau Guru, lalu periksa preview sebelum mengirim.',
     ],
     mobileGuide: [
       'Orang tua dan siswa tidak perlu menginstal aplikasi tambahan khusus untuk menerima pesan WhatsApp resmi.',

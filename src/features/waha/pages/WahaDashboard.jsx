@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { MessageCircle, PowerOff, QrCode, RefreshCw, Send, ShieldAlert, Smartphone } from 'lucide-react'
+import { MessageCircle, PowerOff, QrCode, RefreshCw, Send, ShieldAlert, Smartphone, Wifi } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Card from '../../../components/ui/Card'
 import Button from '../../../components/ui/Button'
@@ -10,6 +10,7 @@ import { wahaService } from '../services/wahaService'
 
 const SESSION_ROUTE = '/waha/session'
 const SEND_ROUTE = '/waha/send'
+const NOTIFICATIONS_ROUTE = '/waha/notifications'
 
 const createInitialMessageForm = () => ({
   phone: '',
@@ -139,6 +140,7 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
   const [ewsForm, setEwsForm] = useState(createInitialEwsForm)
   const [loadingStates, setLoadingStates] = useState({
     session: false,
+    connection: false,
     qr: false,
     start: false,
     stop: false,
@@ -149,7 +151,7 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
     ews: false,
   })
 
-  const activeTab = defaultTab === 'send' ? 'send' : 'session'
+  const activeTab = ['send', 'notifications'].includes(defaultTab) ? defaultTab : 'session'
   const sessionSummary = useMemo(() => extractSessionSummary(sessionPayload), [sessionPayload])
   const qrImage = useMemo(() => extractQrImage(qrPayload), [qrPayload])
 
@@ -191,6 +193,19 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
       request: () => wahaService.getSessionStatus(selectedAppkey || undefined),
       successMessage: notify ? 'Status Saung WA berhasil diperbarui.' : '',
       onSuccess: (payload) => setSessionPayload(payload),
+    })
+  }, [handleApiAction, selectedAppkey])
+
+  const checkConnection = useCallback(async () => {
+    return handleApiAction({
+      key: 'connection',
+      request: () => wahaService.checkConnection(selectedAppkey || undefined),
+      successMessage: 'Pengecekan koneksi Saung WA selesai.',
+      onSuccess: (payload) => setSessionPayload((current) => ({
+        ...current,
+        ...payload,
+        session: current?.session || selectedAppkey || payload?.appkey,
+      })),
     })
   }, [handleApiAction, selectedAppkey])
 
@@ -273,7 +288,12 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
   }
 
   const handleTabChange = (tab) => {
-    navigate(tab === 'send' ? SEND_ROUTE : SESSION_ROUTE)
+    const routes = {
+      session: SESSION_ROUTE,
+      send: SEND_ROUTE,
+      notifications: NOTIFICATIONS_ROUTE,
+    }
+    navigate(routes[tab] || SESSION_ROUTE)
   }
 
   const handleSendMessage = async (event) => {
@@ -350,7 +370,7 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Modul WhatsApp</h1>
             <p className="mt-1 max-w-3xl text-sm text-gray-500 dark:text-gray-400">
-              Kelola device Saung WA (multi-number / unlimited), QR autentikasi, kirim pesan manual, dan notifikasi SPP, PPDB, serta EWS dari satu halaman.
+              Kelola device Saung WA (multi-number / unlimited), QR autentikasi, kirim pesan manual, dan notifikasi SPP, PPDB, serta EWS.
             </p>
           </div>
         </div>
@@ -362,7 +382,11 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
           </Button>
           <Button variant={activeTab === 'send' ? 'primary' : 'secondary'} onClick={() => handleTabChange('send')}>
             <Send size={18} className="mr-2" />
-            Kirim Pesan & Notifikasi
+            Kirim Pesan
+          </Button>
+          <Button variant={activeTab === 'notifications' ? 'primary' : 'secondary'} onClick={() => handleTabChange('notifications')}>
+            <ShieldAlert size={18} className="mr-2" />
+            Notifikasi
           </Button>
         </div>
       </div>
@@ -407,6 +431,10 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
                   <RefreshCw size={18} className="mr-2" />
                   Refresh Status
                 </Button>
+                <Button variant="secondary" onClick={checkConnection} loading={loadingStates.connection}>
+                  <Wifi size={18} className="mr-2" />
+                  Cek Koneksi
+                </Button>
                 <PermissionGuard permission="waha.manage">
                   <Button variant="danger" onClick={handleStopSession} loading={loadingStates.stop}>
                     <PowerOff size={18} className="mr-2" />
@@ -431,7 +459,7 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
             <div className="space-y-4">
               <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900/40">
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  Endpoint backend: <span className="font-semibold text-gray-900 dark:text-white">GET /api/v1/whatsapp/session</span> dan <span className="font-semibold text-gray-900 dark:text-white">POST /api/v1/whatsapp/session/start</span>.
+                  Endpoint backend: <span className="font-semibold text-gray-900 dark:text-white">GET /api/v1/whatsapp/connection</span> untuk cek koneksi tanpa mengirim pesan.
                 </p>
               </div>
               <JsonPreview value={sessionPayload} />
@@ -495,13 +523,17 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
             <Card title="Response Terakhir">
               <div className="space-y-4">
                 <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-300">
-                  Semua aksi pada tab ini menggunakan endpoint backend WhatsApp yang diproteksi permission: <span className="font-semibold">waha.send, waha.notify.spp, waha.notify.ppdb, waha.notify.ews</span>.
+                  Pengiriman pesan manual menggunakan endpoint backend WhatsApp yang diproteksi permission <span className="font-semibold">waha.send</span>.
                 </div>
                 <JsonPreview value={lastResponse} />
               </div>
             </Card>
           </div>
+        </div>
+      )}
 
+      {activeTab === 'notifications' && (
+        <div className="space-y-6">
           <div className="grid grid-cols-1 gap-6 2xl:grid-cols-3">
             <Card title="Notifikasi SPP">
               <form className="space-y-4" onSubmit={handleNotifySpp}>
@@ -592,6 +624,15 @@ const WahaDashboard = ({ defaultTab = 'session' }) => {
               </form>
             </Card>
           </div>
+
+          <Card title="Response Terakhir">
+            <div className="space-y-4">
+              <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-4 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-900/40 dark:text-gray-300">
+                Notifikasi menggunakan permission <span className="font-semibold">waha.notify.spp, waha.notify.ppdb, dan waha.notify.ews</span>.
+              </div>
+              <JsonPreview value={lastResponse} />
+            </div>
+          </Card>
         </div>
       )}
     </div>

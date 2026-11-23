@@ -102,6 +102,8 @@ const PAGE_TITLES = {
   // WAHA
   '/waha/session': 'WAHA Session',
   '/waha/send': 'WAHA Messaging',
+  '/waha/broadcast': 'WhatsApp Broadcast',
+  '/waha/notifications': 'WAHA Notifications',
   '/waha': 'WhatsApp WAHA',
 
   // BK
@@ -174,6 +176,8 @@ const PREFIX_TITLES = [
   ['/bk', 'Bimbingan Konseling'],
   ['/waha/session', 'WAHA Session'],
   ['/waha/send', 'WAHA Messaging'],
+  ['/waha/broadcast', 'WhatsApp Broadcast'],
+  ['/waha/notifications', 'WAHA Notifications'],
   ['/waha', 'WhatsApp WAHA'],
   ['/siswa', 'Data Siswa'],
   ['/kelas', 'Data Kelas'],
