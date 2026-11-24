@@ -36,7 +36,7 @@ import { getPermissionFingerprint } from '../../hooks/usePermission'
 
 library.add(fas, far, fab)
 
-const SIDEBAR_MENU_CACHE_PREFIX = 'sidebar-menu-cache-v3:'
+const SIDEBAR_MENU_CACHE_PREFIX = 'sidebar-menu-cache-v4:'
 const SIDEBAR_MENU_CACHE_TTL_MS = 30 * 60 * 1000 // 30 minutes
 const sidebarMenuRequestCache = new Map()
 
@@ -523,7 +523,7 @@ const Sidebar = ({ isOpen, onClose }) => {
               <div className="text-sm text-red-400 text-center p-4">
                 {error}
               </div>
-            ) : navigation.length === 0 && !canAccessPath(user, '/wallet') && !canAccessPath(user, '/tv-pair') ? (
+            ) : navigation.length === 0 && !canAccessPath(user, '/wallet') ? (
               <div className="text-sm text-center p-4" style={{ color: 'var(--sb-text-muted)' }}>
                 No menu items available
               </div>
@@ -543,23 +543,6 @@ const Sidebar = ({ isOpen, onClose }) => {
                     >
                       <QrCode size={20} />
                       <span>Kantin & Saldo</span>
-                    </NavLink>
-                  </li>
-                )}
-                {!navigation.some((item) => item.to === '/tv-pair' || item.children?.some((child) => child.to === '/tv-pair')) && canAccessPath(user, '/tv-pair') && (
-                  <li>
-                    <NavLink
-                      to="/tv-pair"
-                      className={({ isActive }) =>
-                        isActive ? 'sidebar-link active' : 'sidebar-link'
-                      }
-                      onClick={() => {
-                        handleMenuNavigate?.()
-                        onClose?.()
-                      }}
-                    >
-                      <Table2 size={20} />
-                      <span>Kelola TV</span>
                     </NavLink>
                   </li>
                 )}
