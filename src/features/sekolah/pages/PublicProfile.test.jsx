@@ -40,7 +40,7 @@ const mockSekolah = {
   ],
   ppdb: {
     is_active: true,
-    gelombang: [{ id: 5, nama_gelombang: 'Gelombang 1 Reguler' }],
+    gelombang: [{ id: 5, nama_gelombang: 'Jalur Prestasi Akademik' }],
   },
 }
 
@@ -67,7 +67,8 @@ describe('PublicProfile Component', () => {
 
     expect(screen.getAllByText('NPSN: 20501234').length).toBeGreaterThan(0)
     expect(screen.getByText('Jl. Pemuda No. 10')).toBeDefined()
-    expect(screen.getByText('Gelombang 1 Reguler')).toBeDefined()
+    expect(screen.getByText('Jalur Prestasi Akademik')).toBeDefined()
+    expect(screen.queryByText('Gelombang 5')).toBeNull()
     expect(screen.getByText('Rekayasa Perangkat Lunak')).toBeDefined()
     expect(screen.getByText('Pramuka')).toBeDefined()
     expect(screen.getByText('Budi Santoso, S.Pd')).toBeDefined()
